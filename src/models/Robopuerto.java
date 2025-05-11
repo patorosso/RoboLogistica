@@ -1,11 +1,10 @@
 package models;
 
 import helpers.Posicion;
-import contracts.IPosicionable;
+import contracts.Posicionable;
 
-public class Robopuerto implements IPosicionable {
-    private int id;
-    private Posicion posicion;
-    private double radioCobertura;
+public class Robopuerto implements Posicionable {
+	private int id;
+	private Posicion posicion;
+	private double radioCobertura;
 }
-

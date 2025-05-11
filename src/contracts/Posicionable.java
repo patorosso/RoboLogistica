@@ -2,6 +2,6 @@ package contracts;
 
 import helpers.Posicion;
 
-public interface IPosicionable {
+public interface Posicionable {
 	Posicion posicion = null;
 }
