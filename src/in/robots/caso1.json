@@ -1,0 +1,16 @@
+[
+  {
+    "id": "RB1",
+    "capacidadCarga": 100,
+    "bateriaActual": 50,
+    "capacidadTraslado": 50,
+    "posicion": { "x": 1, "y": 2 }
+  },
+  {
+    "id": "RB2",
+    "capacidadCarga": 100,
+    "bateriaActual": 50,
+    "capacidadTraslado": 10,
+    "posicion": { "x": 12, "y": 12 }
+  }
+]

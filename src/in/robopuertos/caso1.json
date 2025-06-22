@@ -1,0 +1,4 @@
+[
+  { "id": "RP1", "posicion": { "x": 5, "y": 5 }, "radioCobertura": 20.5 },
+  { "id": "RP2", "posicion": { "x": 15, "y": 25 }, "radioCobertura": 5.7 }
+]

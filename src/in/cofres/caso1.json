@@ -1,0 +1,18 @@
+[
+  {
+    "id": "C1",
+    "posicion": { "x": 1, "y": 2 },
+    "tipo": "COFRE_SOLICITUD",
+    "itemsSolicitados": [{ "nombre": "hierro", "cantidad": 10 }],
+    "itemsOfrecidos": [],
+    "itemsAlmacenados": []
+  },
+  {
+    "id": "C2",
+    "posicion": { "x": 12, "y": 2 },
+    "tipo": "COFRE_SOLICITUD",
+    "itemsSolicitados": [{ "nombre": "metal", "cantidad": 40 }],
+    "itemsOfrecidos": [],
+    "itemsAlmacenados": []
+  }
+]
