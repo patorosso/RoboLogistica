@@ -11,4 +11,9 @@ public class Movimiento {
 	private int cantidad;
 	private double distancia;
 	private double energiaConsumida;
+	
+	
+	public Movimiento getMovimiento() {
+		return this;
+	}
 }

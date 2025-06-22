@@ -4,4 +4,6 @@ import helpers.Posicion;
 
 public interface Posicionable {
 	Posicion posicion = null;
+	
+	Posicion getPosicion();
 }
