@@ -5,71 +5,110 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import contracts.Posicionable;
 
 public class RedLogistica {
-	private List<Cofre> cofres;
-	private List<Robot> robots;
-	private List<Robopuerto> robopuertos;
 
-	public void ejecutarCiclo() {
-	};
+	    private String idRed; // Ej: "RL1"
+	    private Set<Nodo> nodos;
+	    private List<Robot> robots;
+	    private Map<String, List<Arista>> listaAdyacencia;
 
-	public void simularHastaEstadoEstable() {
-	};
+	    public RedLogistica(String idRed) {
+	        this.idRed = idRed;
+	        this.nodos = new HashSet<>();
+	        this.robots = new ArrayList<>();
+	        this.listaAdyacencia = new HashMap<>();
+	    }
 
-	public static List<RedLogistica> getRedes(List<Cofre> cofres, List<Robopuerto> robopuertos, List<Robot> robots) {
-		List<RedLogistica> redes = new ArrayList<>();
+	    public String getIdRed() {
+	        return idRed;
+	    }
+
+	    public Set<Nodo> getNodos() {
+	        return nodos;
+	    }
+
+	    public List<Robot> getRobots() {
+	        return robots;
+	    }
+
+	    public Map<String, List<Arista>> getListaAdyacencia() {
+	        return listaAdyacencia;
+	    }
+
+	    public void agregarNodo(Posicionable obj) {
+	        if (obj instanceof Robopuerto || obj instanceof Cofre) {
+	            nodos.add(new Nodo(obj)); // asumimos que Nodo envuelve a robopuertos y cofres
+	        }
+	    }
+
+	    public void agregarRobot(Robot robot) {
+	        robots.add(robot);
+	    }
 	    
-	    // 1. Crear mapa de adyacencias para robopuertos
-	    Map<Robopuerto, List<Robopuerto>> adyacentes = new HashMap();
-	    for (Robopuerto r1 : robopuertos) {
-	        for (Robopuerto r2 : robopuertos) {
-	            if (!r1.equals(r2) && r1.seSolapaCon(r2)) {
-	                adyacentes.computeIfAbsent(r1, k -> new ArrayList<>()).add(r2);
-	                adyacentes.computeIfAbsent(r2, k -> new ArrayList<>()).add(r1);
+	    public void generarAristasEntreRobopuertos() {
+	        List<Nodo> robopuertos = nodos.stream()
+	            .filter(n -> n.getEntidad() instanceof Robopuerto)
+	            .toList();
+
+	        for (int i = 0; i < robopuertos.size(); i++) {
+	            Nodo a = robopuertos.get(i);
+	            listaAdyacencia.putIfAbsent(a.getId(), new ArrayList<>()); // ⚠ asegurar clave aunque esté solo
+
+	            for (int j = i + 1; j < robopuertos.size(); j++) {
+	                Nodo b = robopuertos.get(j);
+
+	                double distancia = a.getPosicion().distanciaA(b.getPosicion());
+	                agregarArista(a.getId(), b.getId(), distancia);
 	            }
 	        }
 	    }
 
-	    // 2. Buscar componentes conexas con DFS o BFS
-	    Set<Robopuerto> visitados = new HashSet();
-	    for (Robopuerto r : robopuertos) {
-	        if (!visitados.contains(r)) {
-	            Set<Robopuerto> componente = new HashSet<>();
-	            dfs(r, adyacentes, visitados, componente);
 
-	            // 3. Crear la red con estos robopuertos
-	            RedLogistica red = new RedLogistica();
-	            red.robopuertos.addAll(componente);
 
-	            // 4. Agregar cofres cubiertos
-	            for (Cofre c : cofres) {
-	                if (componente.stream().anyMatch(rp -> rp.cubre(c))) {
-	                    red.cofres.add(c);
-	                }
-	            }
+	    public void agregarArista(String idOrigen, String idDestino, double peso) {
+	        listaAdyacencia
+	            .computeIfAbsent(idOrigen, k -> new ArrayList<>())
+	            .add(new Arista(idDestino, peso));
 
-	            // 5. Agregar robots que empiecen dentro de la red
-	            for (Robot robot : robots) {
-	                if (componente.stream().anyMatch(rp -> rp.cubre(robot))) {
-	                    red.robots.add(robot);
-	                }
-	            }
+	        listaAdyacencia
+	            .computeIfAbsent(idDestino, k -> new ArrayList<>())
+	            .add(new Arista(idOrigen, peso)); // grafo no dirigido
+	    }
 
-	            redes.add(red);
+	    @Override
+	    public String toString() {
+	        return "\n🔗 Red logística " + idRed +
+	               "\n   - Nodos: " + nodos.size() +
+	               "\n   - Robots: " + robots.size();
+	    }
+	    
+	    public void mostrarNodos() {
+	        System.out.print("\n" + idRed + " → [");
+	        String lista = nodos.stream()
+	                            .map(Nodo::getId)
+	                            .collect(Collectors.joining(", "));
+	        System.out.println(lista + "]");
+	    }
+	    /*	Recorre todos los Nodo de la red,
+			Toma su id,
+			Los concatena separados por coma,
+			Y los imprime con el prefijo de la red logística.
+			*/
+
+	    public void mostrarRobots() {
+	        System.out.println("\n 🤖 Robots en " + idRed + ": " + robots.size());
+	        for (Robot robot : robots) {
+	            System.out.println("   - " + robot.getId() + " (Inicio: " + robot.getIdRobopuertoInicial() + ")");
 	        }
 	    }
 
-	    return redes;
 	}
+
 	
-	private static void dfs(Robopuerto actual, Map<Robopuerto, List<Robopuerto>> grafo, Set<Robopuerto> visitados, Set<Robopuerto> componente) {
-	    visitados.add(actual);
-	    componente.add(actual);
-	    for (Robopuerto vecino : grafo.getOrDefault(actual, List.of())) {
-	        if (!visitados.contains(vecino)) {
-	            dfs(vecino, grafo, visitados, componente);
-	        }
-	    }
-	}
-}
+
+	
+

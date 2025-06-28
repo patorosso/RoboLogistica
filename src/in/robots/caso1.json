@@ -1,16 +1,18 @@
 [
   {
     "id": "RB1",
-    "capacidadCarga": 100,
+	"bateriaMaxima": 50,
+    "capacidadCarga": 17,
     "bateriaActual": 50,
-    "capacidadTraslado": 50,
-    "posicion": { "x": 1, "y": 2 }
+    "factorConsumo": 1,
+	"idRobopuertoInicial": "RP1"
   },
   {
     "id": "RB2",
-    "capacidadCarga": 100,
+	"bateriaMaxima": 50,
+    "capacidadCarga": 10,
     "bateriaActual": 50,
-    "capacidadTraslado": 10,
-    "posicion": { "x": 12, "y": 12 }
+    "factorConsumo": 1,
+	"idRobopuertoInicial": "RP3"
   }
 ]

@@ -22,9 +22,23 @@ public class Robopuerto implements Posicionable {
 		double distanciaCentros = this.posicion.distanciaA(otro.getPosicion());
 		return distanciaCentros <= (this.radioCobertura + otro.radioCobertura);
 	}
-
+	//Dos robopuertos se solapan si la distancia entre sus centros es menor o 
+	//igual a la suma de sus radios de cobertura.
+	
 	@Override
 	public Posicion getPosicion() {
 		return this.posicion;
 	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	@Override
+	public String toString() {
+	    return "\n🛰️ Robopuerto " + id +
+	           "\n   - Posición: (" + posicion.getX() + ", " + posicion.getY() + ")" +
+	           "\n   - Radio de cobertura: " + radioCobertura;
+	}
+
 }
