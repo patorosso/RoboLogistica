@@ -23,7 +23,7 @@ public class Main {
 			//GENERO UN MAP/LISTADO DE REDES LOGISTICAS Y MUESTRO LAS GENERADAS
 			Map<String, RedLogistica> redes = GeneradorDeRedes.construirRedesLogisticas(robopuertos);
 			for (RedLogistica red : redes.values()) {
-			    red.mostrarNodos();
+			    red.mostrarRobopuertos();
 			}
 
 			//GENERO LAS ARISTAS ENTRE ROBOPUERTOS DE LA MISMA RED
@@ -42,6 +42,12 @@ public class Main {
 			
 			//GENERO LAS ARISTAS ENTRE COFRES DE LA MISMA RED
 			GeneradorDeRedes.procesarCofresEnRedes(cofres, redes);
+			
+			//MUESTRO POR CONSOLA LOS COFRES ALMACENADOS EN SU TIPO DE LISTA
+			for (RedLogistica red : redes.values()) {
+			    red.mostrarCofresPorTipo();
+			}
+			
 			
 			//MUESTRO POR CONSOLA LAS ARISTAS PARA VERIFICAR CORRECTA LECTURA
 			for (RedLogistica red : redes.values()) {
@@ -63,11 +69,37 @@ public class Main {
 			for (Robot robot : robots) {
 			    System.out.println(robot);
 			}
-			
+			/*
 			//MUESTRO QUE LOS ROBOTS FUERON ASIGNADOS A LAS REDES CORRECTAMENTE
 			for (RedLogistica red : redes.values()) {
 			    red.mostrarRobots();
+			}*/
+			
+			for (RedLogistica red : redes.values()) {
+			    System.out.println("🤖 Robots en " + red.getIdRed() + ":");
+			    for (Robot r : red.getRobots()) {
+			        System.out.println("   - " + r.getId() + " (Inicio: " + r.getIdRobopuertoInicial() +
+			                           " → Pos: " + r.getPosicion().getX() + ", " + r.getPosicion().getY() + ")");
+			    }
 			}
+			// ---------------------- Procesamiento ----------------------
+
+//			for (RedLogistica red : redes.values()) {
+//
+//				if (!red.esProcesable()) {
+//					System.out.println("No se pudo alcanzar estado estable.");
+//					return;
+//				}
+//
+//				List<Cofre> peticiones = red.getPeticiones();
+//
+//				for (Cofre peticion : peticiones) {
+//					List<Movimiento> movimientos = red.procesarPeticion(peticion);
+//					System.out.println(movimientos); // escribir archivo .out (después)
+//				}
+//
+//			}
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

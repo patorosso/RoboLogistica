@@ -30,16 +30,11 @@ public abstract class Cofre implements Posicionable {
 	protected List<Item> itemsSolicitados;
 	@JsonProperty("itemsAlmacenados")
 	protected List<Item> itemsAlmacenados;
-	
-	protected String idRedLogistica;
 
 
 	public Constantes.TipoCofre getTipo() {
 	    return tipo;
 	}
-	public void setIdRedLogistica(String idRedLogis) {
-        this.idRedLogistica = idRedLogis;
-    }
 
 	@Override
 	public Posicion getPosicion() {
@@ -91,8 +86,7 @@ public abstract class Cofre implements Posicionable {
 	            ", tipo=" + getTipo()+
 	            ", x=" + posicion.getX() +
 	            ", y=" + posicion.getY() +
-	            mostrarItemsComoTexto() +
-	            ", idRedLogistica=" + idRedLogistica + 
+	            mostrarItemsComoTexto() + 
 	            '}';
 	}
 

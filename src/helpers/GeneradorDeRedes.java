@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.Cofre;
-import models.Nodo;
+
 import models.RedLogistica;
 import models.Robopuerto;
 import models.Robot;
@@ -46,7 +46,7 @@ public class GeneradorDeRedes {
 	            Robopuerto rp = robopuertos.stream()
 	                .filter(r -> r.getId().equals(idRobopuerto))
 	                .findFirst().orElseThrow();
-	            red.agregarNodo(rp); // suponiendo que RedLogistica tiene agregarNodo(Robopuerto)
+	            red.agregarRobopuerto(rp); // suponiendo que RedLogistica tiene agregarNodo(Robopuerto)
 	        }
 
 	        redes.put(nombreRed, red);
@@ -54,34 +54,31 @@ public class GeneradorDeRedes {
 
 	    return redes;
 	}
-
-	public static void procesarCofresEnRedes(List<Cofre> cofres, Map<String, RedLogistica> redes) {
+	
+	public static void procesarCofresEnRedes(List<Cofre> cofres, Map<String, RedLogistica> redes) {	//NEW
 	    for (Cofre cofre : cofres) {
 	        boolean asignado = false;
 
 	        for (RedLogistica red : redes.values()) {
-	            // Buscar UN robopuerto de esta red que cubra al cofre
-	            for (Nodo nodo : red.getNodos()) {
-	                if (nodo.getEntidad() instanceof Robopuerto rp && rp.cubre(cofre)) {
+	            for (Robopuerto rp : red.getRobopuertos()) {
+	                if (rp.cubre(cofre)) {
 
-	                    // Asignar la red al cofre
-	                    cofre.setIdRedLogistica(red.getIdRed());
-	                    red.agregarNodo(cofre); // solo una vez
 
-	                    // Conectar el cofre a TODOS los robopuertos de esa red
-	                    red.getNodos().stream()
-	                        .filter(n -> n.getEntidad() instanceof Robopuerto)
-	                        .forEach(n -> {
-	                            double distancia = n.getPosicion().distanciaA(cofre.getPosicion());
-	                            red.agregarArista(cofre.getId(), n.getId(), distancia);
-	                        });
+	                    // Agregar el cofre a la red
+	                    red.agregarCofre(cofre);
+
+	                    // Crear aristas entre el cofre y todos los robopuertos de la red
+	                    for (Robopuerto otroRp : red.getRobopuertos()) {
+	                        double distancia = otroRp.getPosicion().distanciaA(cofre.getPosicion());
+	                        red.agregarArista(cofre.getId(), otroRp.getId(), distancia);
+	                    }
 
 	                    asignado = true;
-	                    break; // Ya no necesitamos seguir en esta red
+	                    break;
 	                }
 	            }
 
-	            if (asignado) break; // Ya no necesitamos seguir buscando en otras redes
+	            if (asignado) break;
 	        }
 
 	        if (!asignado) {
@@ -89,27 +86,23 @@ public class GeneradorDeRedes {
 	        }
 	    }
 	}
-	
+
 	public static void asignarRobotsASusRedes(List<Robot> robots, Map<String, RedLogistica> redes) {
 	    for (Robot robot : robots) {
 	        for (RedLogistica red : redes.values()) {
-	            if (red.getListaAdyacencia().containsKey(robot.getIdRobopuertoInicial())) {
-	                // Asignar robot a la red
-	                red.agregarRobot(robot);
+	            for (Robopuerto rp : red.getRobopuertos()) {
+	                if (rp.getId().equals(robot.getIdRobopuertoInicial())) {
+	                    // Asignar robot a la red
+	                    red.agregarRobot(robot);
 
-	                // Buscar el Nodo robopuerto correspondiente y setear posición
-	                Nodo nodo = red.getNodos().stream()
-	                    .filter(n -> n.getId().equals(robot.getIdRobopuertoInicial()))
-	                    .findFirst()
-	                    .orElse(null);
+	                    // Setear posición del robot al robopuerto inicial
+	                    robot.setPosicion(rp.getPosicion());
 
-	                if (nodo != null) {
-	                    robot.setPosicion(nodo.getPosicion());
-	                } else {
-	                    System.err.println("⚠ No se encontró el robopuerto " + robot.getIdRobopuertoInicial() + " en " + red.getIdRed());
+	                    // (Opcional) Asignar la red al robot, si lo necesitás después
+	                    // robot.setIdRedLogistica(red.getIdRed());
+
+	                    break;
 	                }
-
-	                break;
 	            }
 	        }
 	    }
