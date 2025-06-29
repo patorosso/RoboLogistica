@@ -66,6 +66,9 @@ public class GeneradorDeRedes {
 
 	                    // Asignar la red al cofre
 	                    cofre.setIdRedLogistica(red.getIdRed());
+	                    
+	                    // Encolarlo a la lista de peticiones
+	                    red.agregarPeticion(cofre); // solo una vez
 	                    red.agregarNodo(cofre); // solo una vez
 
 	                    // Conectar el cofre a TODOS los robopuertos de esa red

@@ -17,6 +17,7 @@ import helpers.Constantes;
 //		  @JsonSubTypes.Type(value = CofreAlmacenamiento.class, name = "COFRE_ALMACENAMIENTO"),
 //		  @JsonSubTypes.Type(value = CofreBufer.class, name = "COFRE_BUFER")
 })
+
 public abstract class Cofre implements Posicionable {
 	@JsonProperty("id")
 	protected String id;
