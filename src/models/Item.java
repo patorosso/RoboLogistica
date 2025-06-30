@@ -16,6 +16,10 @@ public class Item {
         return cantidad;
     }
 
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
     @Override
     public String toString() {
         return nombre + " (x" + cantidad + ")";

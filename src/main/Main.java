@@ -82,24 +82,17 @@ public class Main {
 			                           " → Pos: " + r.getPosicion().getX() + ", " + r.getPosicion().getY() + ")");
 			    }
 			}
-			// ---------------------- Procesamiento ----------------------
 
-//			for (RedLogistica red : redes.values()) {
-//
-//				if (!red.esProcesable()) {
-//					System.out.println("No se pudo alcanzar estado estable.");
-//					return;
-//				}
-//
-//				List<Cofre> peticiones = red.getPeticiones();
-//
-//				for (Cofre peticion : peticiones) {
-//					List<Movimiento> movimientos = red.procesarPeticion(peticion);
-//					System.out.println(movimientos); // escribir archivo .out (después)
-//				}
-//
-//			}
-
+			for (RedLogistica red : redes.values()) {
+			    red.calcularCaminosMinimos();
+			    int ciclo = 1;
+			    while (red.esProcesable()) {
+			        System.out.println("\n--- Ciclo de simulacion " + ciclo + " en " + red.getIdRed() + " ---");
+			        red.asignarSolicitudes();
+			        ciclo++;
+			    }
+			    System.out.println("\nRed " + red.getIdRed() + " llego a estado estable o no es procesable.");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -14,5 +14,16 @@
     "itemsSolicitados": [{ "nombre": "metal", "cantidad": 40 }],
     "itemsOfrecidos": [],
     "itemsAlmacenados": []
+  },
+  {
+    "id": "C3",
+    "posicion": { "x": 6, "y": 2 },
+    "tipo": "PROVISION_ACTIVA",
+    "itemsSolicitados": [],
+    "itemsOfrecidos": [
+      { "nombre": "hierro", "cantidad": 20 },
+      { "nombre": "metal", "cantidad": 50 }
+    ],
+    "itemsAlmacenados": []
   }
 ]

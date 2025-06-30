@@ -4,6 +4,7 @@ package helpers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import models.Cofre;
 
@@ -82,7 +83,7 @@ public class GeneradorDeRedes {
 	        }
 
 	        if (!asignado) {
-	            System.err.println("⚠ Cofre " + cofre.getId() + " no fue asignado a ninguna red logística.");
+	            System.err.println("ERROR: Cofre " + cofre.getId() + " no fue asignado a ninguna red logistica.");
 	        }
 	    }
 	}
@@ -98,8 +99,6 @@ public class GeneradorDeRedes {
 	                    // Setear posición del robot al robopuerto inicial
 	                    robot.setPosicion(rp.getPosicion());
 
-	                    // (Opcional) Asignar la red al robot, si lo necesitás después
-	                    // robot.setIdRedLogistica(red.getIdRed());
 
 	                    break;
 	                }

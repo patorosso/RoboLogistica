@@ -36,9 +36,9 @@ public class Robopuerto implements Posicionable {
 	
 	@Override
 	public String toString() {
-	    return "\n🛰️ Robopuerto " + id +
-	           "\n   - Posición: (" + posicion.getX() + ", " + posicion.getY() + ")" +
-	           "\n   - Radio de cobertura: " + radioCobertura;
+	    return "\nRobopuerto " + id +
+	           "\n   - Posicion: (" + posicion.getX() + ", " + posicion.getY() + ")" +
+	           "\n   - Alcance: " + radioCobertura;
 	}
 
 }

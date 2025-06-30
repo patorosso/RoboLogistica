@@ -11,11 +11,12 @@ import contracts.Posicionable;
 import helpers.Constantes;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipo")
-@JsonSubTypes({ @JsonSubTypes.Type(value = CofreSolicitud.class, name = "COFRE_SOLICITUD"),
-//		  @JsonSubTypes.Type(value = CofreProvisionActiva.class, name = "COFRE_PROVISION_ACTIVA"),
-//		  @JsonSubTypes.Type(value = CofreProvisionPasiva.class, name = "COFRE_PROVISION_PASIVA"),
-//		  @JsonSubTypes.Type(value = CofreAlmacenamiento.class, name = "COFRE_ALMACENAMIENTO"),
-//		  @JsonSubTypes.Type(value = CofreBufer.class, name = "COFRE_BUFER")
+@JsonSubTypes({ 
+    @JsonSubTypes.Type(value = CofreSolicitud.class, name = "COFRE_SOLICITUD"),
+    @JsonSubTypes.Type(value = CofreProvisionActiva.class, name = "PROVISION_ACTIVA"),
+    @JsonSubTypes.Type(value = CofreProvisionPasiva.class, name = "PROVISION_PASIVA"),
+    @JsonSubTypes.Type(value = CofreAlmacenamiento.class, name = "ALMACENAMIENTO"),
+    @JsonSubTypes.Type(value = CofreBufer.class, name = "BUFFER")
 })
 public abstract class Cofre implements Posicionable {
 	@JsonProperty("id")
@@ -45,10 +46,33 @@ public abstract class Cofre implements Posicionable {
 		return this.id;
 	}
 	
+	public boolean tieneItemDisponible(String item, int cantidad) {
+		if (itemsOfrecidos == null) return false;
+		
+		for (Item itemOfrecido : itemsOfrecidos) {
+			if (itemOfrecido.getNombre().equals(item) && itemOfrecido.getCantidad() >= cantidad) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public List<Item> getItemsSolicitados() {
+		return this.itemsSolicitados;
+	}
+	
+	public List<Item> getItemsOfrecidos() {
+		return this.itemsOfrecidos;
+	}
+	
+	public List<Item> getItemsAlmacenados() {
+		return this.itemsAlmacenados;
+	}
+	
 	public String mostrarItemsComoTexto() {
 	    StringBuilder sb = new StringBuilder();
 
-	    sb.append("\n  📦 Items Solicitados: ");
+	    sb.append("\n  Items Solicitados: ");
 	    if (itemsSolicitados != null && !itemsSolicitados.isEmpty()) {
 	        for (Item item : itemsSolicitados) {
 	            sb.append("\n    - ").append(item);
@@ -57,7 +81,7 @@ public abstract class Cofre implements Posicionable {
 	        sb.append(" (ninguno)");
 	    }
 
-	    sb.append("\n  📤 Items Ofrecidos: ");
+	    sb.append("\n  Items Ofrecidos: ");
 	    if (itemsOfrecidos != null && !itemsOfrecidos.isEmpty()) {
 	        for (Item item : itemsOfrecidos) {
 	            sb.append("\n    - ").append(item);
@@ -66,7 +90,7 @@ public abstract class Cofre implements Posicionable {
 	        sb.append(" (ninguno)");
 	    }
 
-	    sb.append("\n  🗃️ Items Almacenados: ");
+	    sb.append("\n  Items Almacenados: ");
 	    if (itemsAlmacenados != null && !itemsAlmacenados.isEmpty()) {
 	        for (Item item : itemsAlmacenados) {
 	            sb.append("\n    - ").append(item);
@@ -83,10 +107,10 @@ public abstract class Cofre implements Posicionable {
 	public String toString() {
 	    return "\n Cofre{" +
 	            "id=" + id +
-	            ", tipo=" + getTipo()+
+	            ", tipo=" + getTipo() +
 	            ", x=" + posicion.getX() +
 	            ", y=" + posicion.getY() +
-	            mostrarItemsComoTexto() + 
+	            mostrarItemsComoTexto() +
 	            '}';
 	}
 
